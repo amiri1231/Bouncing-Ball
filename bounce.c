@@ -12,11 +12,11 @@
 
 
 typedef struct {
-    int x;
-    int y;
-    int radius;
-    int vx;
-    int vy;
+    double x;
+    double y;
+    double radius;
+    double vx;
+    double vy;
 
 } Circle;
 
@@ -24,17 +24,17 @@ typedef struct {
 
 void FillCircle(SDL_Surface *psurface, Circle circle){
 
-    int low_x = circle.x - circle.radius; // leftmost x coordinate
-    int low_y = circle.y - circle.radius;   // bottommost y coordinate
-    int high_x = circle.x + circle.radius;  // rightmost x coordinate
-    int high_y = circle.y + circle.radius; // topmost y coordinate
+    double low_x = circle.x - circle.radius; // leftmost x coordinate
+    double low_y = circle.y - circle.radius;   // bottommost y coordinate
+    double high_x = circle.x + circle.radius;  // rightmost x coordinate
+    double high_y = circle.y + circle.radius; // topmost y coordinate
 
     double radius_squared = circle.radius * circle.radius;
 
 
-    for(int x = low_x; x <= high_x; x++)
+    for(double x = low_x; x <= high_x; x++)
     {
-        for(int y = low_y; y <= high_y; y++)
+        for(double y = low_y; y <= high_y; y++)
         {
             double center_distance_squared = (x- circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
             
@@ -62,8 +62,28 @@ void step(Circle *circle){
     circle->y = circle->y + circle->vy;
     circle->vy += A_GRAVITY;
 
-}
 
+    //bounce off the walls
+    if(circle->x - circle->radius < 0){
+        circle->x = circle->radius;
+        circle->vx = -circle->vx;
+    }
+
+    if(circle->x + circle->radius > WIDTH){
+        circle->x = WIDTH - circle->radius;
+        circle->vx = -circle->vx;
+    }
+
+        // Vertical walls (top/bottom)
+    if(circle->y - circle->radius < 0) {      // top wall
+        circle->y = circle->radius;
+        circle->vy = -circle->vy;
+    }
+    if(circle->y + circle->radius > HEIGHT) { // bottom wall
+        circle->y = HEIGHT - circle->radius;
+        circle->vy = -circle->vy;
+    }
+}
 
 
 int main() {
@@ -74,7 +94,7 @@ int main() {
     
     SDL_Rect erase_rect = (SDL_Rect){0, 0, WIDTH, HEIGHT};
     
-    Circle circle = {WIDTH/2, HEIGHT/2, 10, 0, 0};
+    Circle circle = {WIDTH/2, HEIGHT/2, 50, 4, 0};
 
     SDL_Event event;
     bool app_running = true;
