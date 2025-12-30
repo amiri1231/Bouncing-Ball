@@ -6,13 +6,18 @@
 #define HEIGHT 600
 #define COLOR_BLUE 0x0000FFFF
 #define COLOR_WHITE 0xFFFFFFFF
-#define COLOR_BLACK 0x000000FF
+#define COLOR_BLACK 0x00000000
+#define A_GRAVITY 1
+
 
 
 typedef struct {
     int x;
     int y;
     int radius;
+    int vx;
+    int vy;
+
 } Circle;
 
 //Circle is (X - Xcenter)^2 + (Y - Ycenter)^2 = radius^2
@@ -38,8 +43,8 @@ void FillCircle(SDL_Surface *psurface, Circle circle){
             if(center_distance_squared < radius_squared)
             
             {
-                SDL_Rect pixel = (SDL_Rect){x, y, 5, 20};
-                SDL_FillRect(psurface, &pixel, COLOR_BLUE);
+                SDL_Rect pixel = (SDL_Rect){x, y, 1, 1};
+                SDL_FillRect(psurface, &pixel, COLOR_WHITE);
             }
         
 
@@ -50,18 +55,26 @@ void FillCircle(SDL_Surface *psurface, Circle circle){
 
 }
 
+
+void step(Circle *circle){
+
+    circle->x = circle->x + circle->vx;
+    circle->y = circle->y + circle->vy;
+    circle->vy += A_GRAVITY;
+
+}
+
+
+
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window *pwindow = SDL_CreateWindow("Bouncing Ball", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
     SDL_Surface *psurface = SDL_GetWindowSurface(pwindow);
     
-    Circle circle = {WIDTH/2, HEIGHT/2, 50};
-    FillCircle(psurface, (Circle){WIDTH/2, HEIGHT/2, 50});
-    SDL_UpdateWindowSurface(pwindow);
-
-
-
+    SDL_Rect erase_rect = (SDL_Rect){0, 0, WIDTH, HEIGHT};
+    
+    Circle circle = {WIDTH/2, HEIGHT/2, 10, 0, 0};
 
     SDL_Event event;
     bool app_running = true;
@@ -72,5 +85,10 @@ int main() {
         }
 
     }
+    SDL_FillRect(psurface, &erase_rect, COLOR_BLACK);
+    step(&circle);
+    FillCircle(psurface, circle);
+    SDL_UpdateWindowSurface(pwindow);
+    SDL_Delay(30);
 }
 }
