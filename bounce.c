@@ -4,9 +4,13 @@
 
 #define WIDTH 900
 #define HEIGHT 600
+
 #define COLOR_BLUE 0x0000FFFF
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_BLACK 0x00000000
+
+#define BG_COLOR 0xF0F0F0
+
 #define A_GRAVITY 1
 
 
@@ -89,7 +93,7 @@ void step(Circle *circle){
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window *pwindow = SDL_CreateWindow("Bouncing Ball", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
+    SDL_Window *pwindow = SDL_CreateWindow("Bouncing Ball", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_BORDERLESS);
     SDL_Surface *psurface = SDL_GetWindowSurface(pwindow);
     
     SDL_Rect erase_rect = (SDL_Rect){0, 0, WIDTH, HEIGHT};
@@ -117,7 +121,7 @@ int main() {
         }
 
     }
-    SDL_FillRect(psurface, &erase_rect, COLOR_BLACK);
+    SDL_FillRect(psurface, &erase_rect, COLOR_BLUE);
     step(&circle);
     FillCircle(psurface, circle);
     SDL_UpdateWindowSurface(pwindow);
