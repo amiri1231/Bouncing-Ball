@@ -103,6 +103,18 @@ int main() {
         if (event.type == SDL_QUIT) {
             app_running = 0;
         }
+        if(event.type == SDL_KEYDOWN){
+            //space to reset velocity
+            if(event.key.keysym.sym == SDLK_SPACE){
+                circle.vy = 0;
+                circle.vx = 0;  
+            }
+
+            //backspace to quit the app
+            if(event.key.keysym.sym == SDLK_BACKSPACE){
+                app_running = 0;
+            }
+        }
 
     }
     SDL_FillRect(psurface, &erase_rect, COLOR_BLACK);
